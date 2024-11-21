@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1732209569 source:c:\users\jacqu\documents\github\cc2aed2-u-tfpr-sh\cliente\cliente.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<winsock2.h>
+
