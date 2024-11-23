@@ -1,7 +1,21 @@
 # depslib dependency file v1.0
-1732209569 source:c:\users\jacqu\documents\github\cc2aed2-u-tfpr-sh\cliente\cliente.c
+1732224088 source:c:\users\jorge camargo\desktop\cliente\chat.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<conio.h>
+	<windows.h>
+	<winsock2.h>
+	"chat.h"
+
+1732220943 c:\users\jorge camargo\desktop\cliente\chat.h
+	<winsock2.h>
+
+1732223838 source:c:\users\jorge camargo\desktop\cliente\cliente.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 	<winsock2.h>
+	<windows.h>
+	"chat.h"
 

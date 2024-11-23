@@ -2,8 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <winsock2.h>
+#include <windows.h>
+#include <time.h>
 
-#pragma comment(lib, "ws2_32.lib") // Vincula a biblioteca Winsock
+#pragma comment(lib, "ws2_32.lib")
 
 #define PORTA 9090
 #define MAX_JOGADORES 4
@@ -13,6 +15,7 @@ typedef struct {
     SOCKET socket;
     int id;
     int ativo;
+    int pronto_para_jogar;
 } Jogador;
 
 Jogador jogadores[MAX_JOGADORES] = {0}; // Lista de jogadores conectados
@@ -24,23 +27,14 @@ void conectar_jogador(SOCKET novoSocket, int jogadorID) {
     jogadores[jogadorID].socket = novoSocket;
     jogadores[jogadorID].id = jogadorID + 1;
     jogadores[jogadorID].ativo = 1;
+    jogadores[jogadorID].pronto_para_jogar = 0;
 
     printf("Jogador %d conectado.\n", jogadores[jogadorID].id);
 
     // Enviar mensagem de boas-vindas ao novo jogador
-    sprintf(buffer, "Bem-vindo, Jogador %d! VocÍ est· conectado ao servidor.\n", jogadores[jogadorID].id);
+    sprintf(buffer, "Bem-vindo, Jogador %d!\n", jogadores[jogadorID].id);
     if (send(jogadores[jogadorID].socket, buffer, strlen(buffer), 0) == SOCKET_ERROR) {
-        printf("Erro ao enviar mensagem de boas-vindas para Jogador %d. CÛdigo: %d\n", jogadores[jogadorID].id, WSAGetLastError());
-    }
-
-    // Avisar os outros jogadores sobre o novo jogador
-    sprintf(buffer, "Jogador %d entrou no jogo.\n", jogadores[jogadorID].id);
-    for (int i = 0; i < MAX_JOGADORES; i++) {
-        if (jogadores[i].ativo && i != jogadorID) {
-            if (send(jogadores[i].socket, buffer, strlen(buffer), 0) == SOCKET_ERROR) {
-                printf("Erro ao enviar notificaÁ„o para Jogador %d. CÛdigo: %d\n", jogadores[i].id, WSAGetLastError());
-            }
-        }
+        printf("Erro ao enviar mensagem de boas-vindas para Jogador %d. Codigo: %d\n", jogadores[jogadorID].id, WSAGetLastError());
     }
 }
 
@@ -49,12 +43,12 @@ void desconectar_jogador(int jogadorID) {
 
     printf("Jogador %d desconectou.\n", jogadores[jogadorID].id);
 
-    // Avisar os outros jogadores sobre a desconex„o
+    // Avisar os outros jogadores sobre a desconex√£o
     sprintf(buffer, "Jogador %d desconectou.\n", jogadores[jogadorID].id);
     for (int i = 0; i < MAX_JOGADORES; i++) {
         if (jogadores[i].ativo && i != jogadorID) {
             if (send(jogadores[i].socket, buffer, strlen(buffer), 0) == SOCKET_ERROR) {
-                printf("Erro ao enviar notificaÁ„o de desconex„o para Jogador %d. CÛdigo: %d\n", jogadores[i].id, WSAGetLastError());
+                printf("Erro ao enviar notificacao de desconexao para Jogador %d. Codigo: %d\n", jogadores[i].id, WSAGetLastError());
             }
         }
     }
@@ -62,6 +56,44 @@ void desconectar_jogador(int jogadorID) {
     // Fechar o socket do jogador e marcar como inativo
     closesocket(jogadores[jogadorID].socket);
     jogadores[jogadorID].ativo = 0;
+    jogadores[jogadorID].pronto_para_jogar = 0;
+}
+
+void verificar_jogadores_prontos() {
+    int prontos = 0;
+
+    // Conta quantos jogadores est√£o prontos
+    for (int i = 0; i < MAX_JOGADORES; i++) {
+        if (jogadores[i].ativo && jogadores[i].pronto_para_jogar) {
+            prontos++;
+        }
+    }
+
+    // S√≥ come√ßa o jogo se houver pelo menos 2 jogadores prontos
+    if (prontos >= 2) {
+        // Escolhe uma das 3 op√ß√µes aleatoriamente
+        const char *opcoes[] = {"Mesa de Reis", "Mesa de Rainhas", "Mesa de √Äs"};
+        srand(time(NULL));
+        int escolha = rand() % 3;
+
+        printf("Op√ß√£o escolhida: %s\n", opcoes[escolha]);
+
+        // Envia comando para iniciar o jogo e a op√ß√£o escolhida para todos os jogadores
+        char mensagem[BUFFER_TAM];
+        sprintf(mensagem, "INICIAR_JOGO:%s", opcoes[escolha]);
+
+        for (int i = 0; i < MAX_JOGADORES; i++) {
+            if (jogadores[i].ativo) {
+                if (send(jogadores[i].socket, mensagem, strlen(mensagem), 0) == SOCKET_ERROR) {
+                    printf("Erro ao enviar comando de inicio para Jogador %d. Codigo: %d\n", jogadores[i].id, WSAGetLastError());
+                } else {
+                    printf("Mensagem de in√≠cio enviada para Jogador %d.\n", jogadores[i].id);
+                }
+            }
+        }
+    } else {
+        printf("Esperando mais jogadores. Jogadores prontos: %d\n", prontos);
+    }
 }
 
 void loop_principal() {
@@ -86,11 +118,11 @@ void loop_principal() {
 
         int selectResult = select(maxSocket + 1, &leituraSockets, NULL, NULL, NULL);
         if (selectResult == SOCKET_ERROR) {
-            printf("Erro no select. CÛdigo: %d\n", WSAGetLastError());
+            printf("Erro no select. Codigo: %d\n", WSAGetLastError());
             break;
         }
 
-        // Nova conex„o
+        // Nova conex√£o
         if (FD_ISSET(servidorSocket, &leituraSockets)) {
             SOCKET novoSocket = accept(servidorSocket, (struct sockaddr *)&endereco, &tamEndereco);
 
@@ -105,7 +137,7 @@ void loop_principal() {
                 char *mensagem = "Servidor cheio. Tente novamente mais tarde.\n";
                 send(novoSocket, mensagem, strlen(mensagem), 0);
                 closesocket(novoSocket);
-                printf("Conex„o recusada. N˙mero m·ximo de jogadores atingido.\n");
+                printf("Conexao recusada. Numero maximo de jogadores atingido.\n");
             } else {
                 for (int i = 0; i < MAX_JOGADORES; i++) {
                     if (!jogadores[i].ativo) {
@@ -127,6 +159,13 @@ void loop_principal() {
                 } else {
                     buffer[resultado] = '\0';
                     printf("Jogador %d: %s\n", jogadores[i].id, buffer);
+
+                    // Verifica se o jogador est√° pronto para jogar
+                    if (strcmp(buffer, "PRONTO_PARA_JOGAR") == 0) {
+                        jogadores[i].pronto_para_jogar = 1;
+                        printf("Jogador %d est√° pronto para jogar.\n", jogadores[i].id);
+                        verificar_jogadores_prontos();
+                    }
                 }
             }
         }
@@ -137,13 +176,13 @@ int main() {
     WSADATA wsaData;
 
     if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
-        printf("Erro ao inicializar Winsock. CÛdigo: %d\n", WSAGetLastError());
+        printf("Erro ao inicializar Winsock. Codigo: %d\n", WSAGetLastError());
         return 1;
     }
 
     servidorSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (servidorSocket == INVALID_SOCKET) {
-        printf("Erro ao criar o socket. CÛdigo: %d\n", WSAGetLastError());
+        printf("Erro ao criar o socket. Codigo: %d\n", WSAGetLastError());
         WSACleanup();
         return 1;
     }
@@ -154,14 +193,14 @@ int main() {
     endereco.sin_port = htons(PORTA);
 
     if (bind(servidorSocket, (struct sockaddr *)&endereco, sizeof(endereco)) == SOCKET_ERROR) {
-        printf("Erro no bind. CÛdigo: %d\n", WSAGetLastError());
+        printf("Erro no bind. Codigo: %d\n", WSAGetLastError());
         closesocket(servidorSocket);
         WSACleanup();
         return 1;
     }
 
     if (listen(servidorSocket, MAX_JOGADORES) == SOCKET_ERROR) {
-        printf("Erro no listen. CÛdigo: %d\n", WSAGetLastError());
+        printf("Erro no listen. Codigo: %d\n", WSAGetLastError());
         closesocket(servidorSocket);
         WSACleanup();
         return 1;
