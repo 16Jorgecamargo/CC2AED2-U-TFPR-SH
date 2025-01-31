@@ -7,6 +7,10 @@
 #include "menu.h"
 #include "util.h"
 
+/**
+ * @brief Array com os tipos de monstros base do jogo
+ * @details Cada monstro possui atributos base diferentes
+ */
 const MonstroBase MONSTROS[] = {
     {"Aranha Gigante", 40, 5, 2, 45},      
     {"Golem de Pedra", 80, 4, 8, 60},      
@@ -20,6 +24,12 @@ const MonstroBase MONSTROS[] = {
     {"Dragao Filhote", 100, 10, 9, 100}    
 };
 
+/**
+ * @brief Sistema de batalha por turnos
+ * @details Gerencia as ações do jogador e do monstro, calculando dano e experiência
+ * @param p Ponteiro para o personagem do jogador
+ * @param monstro Ponteiro para o monstro enfrentado
+ */
 void batalha(Personagem *p, MonstroBase *monstro) {
     int opc = 1;
     int tecla;
@@ -101,6 +111,12 @@ void batalha(Personagem *p, MonstroBase *monstro) {
     }
 }
 
+/**
+ * @brief Cria um novo monstro com base no nível do jogador
+ * @details Ajusta os atributos do monstro de acordo com o nível do jogador
+ * @param nivel_jogador Nível atual do jogador
+ * @return Ponteiro para o novo monstro criado
+ */
 MonstroBase* gerarMonstro(int nivel_jogador) {
     MonstroBase* m = malloc(sizeof(MonstroBase));
     int tipo = rand() % 10;

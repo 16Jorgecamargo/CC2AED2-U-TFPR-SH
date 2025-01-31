@@ -5,10 +5,15 @@
 #include <conio.h>
 #include "util.h"
 
-// Funções utilitárias
-
+/**
+ * @brief Implementação das funções utilitárias básicas
+ */
 int minimo(int a, int b) { return (a < b) ? a : b; }
 int maximo(int a, int b) { return (a > b) ? a : b; }
+
+/**
+ * @brief Posiciona o cursor e o torna invisível
+ */
 void linhaCol(int lin, int col)
 {
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), (COORD){col - 1, lin - 1});
@@ -19,6 +24,10 @@ void linhaCol(int lin, int col)
     SetConsoleCursorInfo(consoleHandle, &info);
 }
 
+/**
+ * @brief Desenha uma caixa usando caracteres ASCII estendido
+ * @details Utiliza caracteres especiais para cantos e bordas
+ */
 void box(int lin1, int col1, int lin2, int col2)
 {
     int i;
@@ -49,6 +58,10 @@ void box(int lin1, int col1, int lin2, int col2)
     printf("%c", 217);
 }
 
+/**
+ * @brief Limpa a tela e exibe mensagem opcional
+ * @details Implementação específica para Windows
+ */
 void limparTela(const char *mensagem)
 {
     system("cls");
@@ -60,6 +73,10 @@ void limparTela(const char *mensagem)
     }
 }
 
+/**
+ * @brief Mostra texto com animação de digitação
+ * @details Exibe palavra por palavra com delay
+ */
 void mostrarTextoAnimado(const char *texto, int linha, int coluna)
 {
     char palavra[100];
@@ -100,6 +117,10 @@ void mostrarTextoAnimado(const char *texto, int linha, int coluna)
     printf("                                                                                ");
 }
 
+/**
+ * @brief Lê uma linha aleatória de um arquivo de texto
+ * @details Conta linhas, escolhe uma aleatoriamente e a retorna
+ */
 char *lerFraseAleatoria(const char *arquivo)
 {
     FILE *fp = fopen(arquivo, "r");

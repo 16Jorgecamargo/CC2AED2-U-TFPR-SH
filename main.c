@@ -9,6 +9,17 @@
 #include "menu.h"
 #include "util.h"
 
+/**
+ * @brief Função principal do jogo
+ * @details Gerencia o fluxo principal do jogo, incluindo:
+ * - Inicialização do jogo
+ * - Menu principal
+ * - Loop principal de jogabilidade
+ * - Sistema de eventos aleatórios
+ * - Gerenciamento de save/load
+ * 
+ * @return 0 em caso de término normal
+ */
 int main()
 {
     srand(time(NULL));
@@ -19,6 +30,7 @@ int main()
     {
         escolha = menuPrincipal();
 
+        // Processamento do menu principal
         if (escolha == 3)
         {
             printf("\nObrigado por jogar!\n");
@@ -53,6 +65,7 @@ int main()
             criarPersonagem(&jogador);
         }
 
+        // Loop principal do jogo
         while (1)
         {
             limparTela("1");
@@ -60,6 +73,7 @@ int main()
 
             escolha = menuAcoes(&jogador);
 
+            // Sistema de eventos aleatórios
             switch (escolha)
             {
             case 1:

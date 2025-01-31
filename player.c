@@ -4,6 +4,10 @@
 #include "player.h"
 #include "util.h"
 
+/**
+ * @brief Inicializa um novo personagem com valores base
+ * @details Define valores iniciais para todos os atributos
+ */
 void criarPersonagem(Personagem *p)
 {
     printf("Digite o nome do seu personagem: ");
@@ -17,6 +21,10 @@ void criarPersonagem(Personagem *p)
     p->ultima_mensagem[0] = '\0';
 }
 
+/**
+ * @brief Exibe informações do personagem na tela
+ * @details Mostra status, atributos e inventário atual
+ */
 void mostrarStatus(Personagem *p)
 {
     linhaCol(5, 1);
@@ -33,6 +41,10 @@ void mostrarStatus(Personagem *p)
     }
 }
 
+/**
+ * @brief Processa a evolução de nível do personagem
+ * @details Aumenta atributos base e restaura vida
+ */
 void subirNivel(Personagem *p)
 {
     p->nivel++;
@@ -43,8 +55,10 @@ void subirNivel(Personagem *p)
     printf("\nParabens! Voce subiu para o nivel %d!\n", p->nivel);
 }
 
-
-
+/**
+ * @brief Processa o uso de itens do inventário
+ * @details Implementa efeitos diferentes para cada tipo de poção
+ */
 void usarItem(Personagem *p, int index)
 {
     if (index < 0 || index >= p->num_itens)
@@ -80,6 +94,10 @@ void usarItem(Personagem *p, int index)
     p->num_itens--;
 }
 
+/**
+ * @brief Gerencia adição de itens ao inventário
+ * @details Verifica limite de itens antes de adicionar
+ */
 void adicionarItem(Personagem *p, const char *item)
 {
     if (p->num_itens < 10)
@@ -94,6 +112,10 @@ void adicionarItem(Personagem *p, const char *item)
     }
 }
 
+/**
+ * @brief Salva o estado atual do personagem em arquivo
+ * @details Grava todos os atributos e itens do inventário
+ */
 void salvarProgresso(Personagem *p, const char *arquivo)
 {
     FILE *fp = fopen(arquivo, "w");
@@ -116,6 +138,10 @@ void salvarProgresso(Personagem *p, const char *arquivo)
     fclose(fp);
 }
 
+/**
+ * @brief Carrega o estado do personagem de um arquivo
+ * @details Lê e valida todos os dados salvos
+ */
 int carregarProgresso(Personagem *p, const char *arquivo)
 {
     FILE *fp = fopen(arquivo, "r");

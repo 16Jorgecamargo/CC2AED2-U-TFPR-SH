@@ -6,6 +6,10 @@
 #include "menu.h"
 #include "util.h"
 
+/**
+ * @brief Prepara o layout inicial do menu
+ * @details Cria bordas e título do menu
+ */
 void inicializarTelaMenu(char menuL[menuLi][menuCo]) {
     for (int i = 0; i < menuLi; i++) {
         for (int j = 0; j < menuCo; j++) {
@@ -30,6 +34,10 @@ void inicializarTelaMenu(char menuL[menuLi][menuCo]) {
     }
 }
 
+/**
+ * @brief Desenha o menu na tela com a opção selecionada
+ * @details Atualiza a tela com as opções e destaca a selecionada
+ */
 void renderizarMenu(char menuL[menuLi][menuCo], int opcaoSelecionada) {
     limparTela("1");
 
@@ -63,6 +71,11 @@ void renderizarMenu(char menuL[menuLi][menuCo], int opcaoSelecionada) {
     }
 }
 
+/**
+ * @brief Gerencia o menu principal do jogo
+ * @details Processa entrada do usuário e retorna a opção selecionada
+ * @return Opção selecionada (1-3)
+ */
 int menuPrincipal() {
     char menuL[menuLi][menuCo];
     inicializarTelaMenu(menuL);
@@ -78,10 +91,11 @@ int menuPrincipal() {
     }
 }
 
-
-
-
-
+/**
+ * @brief Gerencia o menu de ações durante o jogo
+ * @details Mostra status do personagem e opções disponíveis
+ * @return Ação selecionada pelo jogador
+ */
 int menuAcoes(Personagem *p)
 {
     char opcoes[4][20] = {"Explorar Dungeon", "Inventario", "Sair da Dungeon", "Voltar ao Menu"};
@@ -116,8 +130,11 @@ int menuAcoes(Personagem *p)
     }
 }
 
-
-
+/**
+ * @brief Gerencia o menu do inventário
+ * @details Permite visualizar e usar itens do inventário
+ * @return 1 se um item foi usado, 0 se cancelou
+ */
 int menuInventario(Personagem *p)
 {
     int opc = 0;
