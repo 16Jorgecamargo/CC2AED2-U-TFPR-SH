@@ -1,0 +1,9 @@
+{
+    "C_Cpp.errorSquiggles": "disabled",
+    "files.associations": {
+        "conio.h": "c",
+        "stdio.h": "c",
+        "windows.h": "c",
+        "string.h": "c"
+    }
+}
