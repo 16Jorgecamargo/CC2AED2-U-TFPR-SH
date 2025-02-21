@@ -80,8 +80,8 @@ int main()
             {
                 int chance = rand() % 100;
 
-                if (chance < 15)
-                { // 15% chance de monstro
+                if (chance < 20)
+                { // 20% chance de monstro
                     char *mensagem = lerFraseAleatoria("eventos/monstro.txt");
                     if (mensagem)
                     {
@@ -104,8 +104,8 @@ int main()
                         }
                     }
                 }
-                else if (chance < 20)
-                { // 5% chance de item
+                else if (chance < 25)
+                { // 25% chance de item
                     char *item = lerFraseAleatoria("eventos/item.txt");
                     if (item)
                     {
@@ -117,7 +117,7 @@ int main()
                     }
                 }
                 else if (chance < 22)
-                { // 2% chance de evento
+                { // 22% chance de evento
                     char *evento = lerFraseAleatoria("eventos/evento.txt");
                     if (evento)
                     {
@@ -164,7 +164,7 @@ int main()
                     }
                 }
                 else
-                { // 78% chance de caminho
+                { // 33% chance de caminho
                     char *caminho = lerFraseAleatoria("eventos/caminho.txt");
                     if (caminho)
                     {

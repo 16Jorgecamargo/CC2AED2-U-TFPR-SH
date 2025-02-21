@@ -175,8 +175,8 @@ gcc main.c player.c monstro.c menu.c util.c -o rpg.exe
 5. ↩️ Enter ou Espaço para selecionar
 6. ❌ ESC para voltar/cancelar
 
-## 👥 Desenvolvedor
+## 👥 Desenvolvedores
 - 👨‍💻 Jorge Camargo
-
-
-
+- 👨‍💻 João Pedro
+- 👨‍💻 Orias Malta Dos Santos Junior
+- 👨‍💻 RRian Augusto Amaral

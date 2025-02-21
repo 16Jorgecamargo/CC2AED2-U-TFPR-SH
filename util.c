@@ -73,6 +73,7 @@ void limparTela(const char *mensagem)
     }
 }
 
+
 /**
  * @brief Mostra texto com animação de digitação
  * @details Exibe palavra por palavra com delay
@@ -101,7 +102,7 @@ void mostrarTextoAnimado(const char *texto, int linha, int coluna)
 
         printf("%s", palavra);
         fflush(stdout);
-        Sleep(300);
+        Sleep(150);
 
         if (texto[i] == ' ')
         {
@@ -109,6 +110,9 @@ void mostrarTextoAnimado(const char *texto, int linha, int coluna)
             i++;
         }
     }
+
+
+    while(_kbhit()) getch();
 
     linhaCol(3, 1);
     printf("Continuar...");

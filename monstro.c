@@ -30,6 +30,14 @@ const MonstroBase MONSTROS[] = {
  * @param p Ponteiro para o personagem do jogador
  * @param monstro Ponteiro para o monstro enfrentado
  */
+
+void LimparBuffer(){
+    while (kbhit()) {
+        getch();
+    }
+}
+
+
 void batalha(Personagem *p, MonstroBase *monstro) {
     int opc = 1;
     int tecla;
@@ -54,23 +62,32 @@ void batalha(Personagem *p, MonstroBase *monstro) {
         }
 
         linhaCol(18, 2);
-        
-        tecla = getch();
 
+        tecla = getch();
+        
+        if(tecla==224){
+            tecla = getch();
+        }
         if (tecla == 72 && opc > 1) { opc--; }
         else if (tecla == 80 && opc < 3) { opc++; }
         else if (tecla == 13 || tecla == 32) {
+            LimparBuffer();
             if (opc == 3) {
                 strcpy(p->ultima_mensagem, "Voce fugiu do monstro, nem item nem experiencia obtido.");
+                Sleep(600);
                 return;
             }
             else if (opc == 2) {
                 if (p->num_itens > 0) {
-                    if (menuInventario(p)) { continue; }
+                    if (menuInventario(p)) {
+                         Sleep(600); 
+                         LimparBuffer();
+                        continue; }
                 } else {
                     linhaCol(18, 2);
                     printf("Voce nao tem itens!");
-                    Sleep(1000);
+                    Sleep(600);
+                    LimparBuffer();
                     continue;
                 }
             }
@@ -80,7 +97,8 @@ void batalha(Personagem *p, MonstroBase *monstro) {
                 vida_monstro -= dano;
                 linhaCol(18, 2);
                 printf("%s causou %d de dano!", p->nome, dano);
-                Sleep(1000);
+                Sleep(700);
+                LimparBuffer();
 
                 if (vida_monstro <= 0) {
                     char mensagem_vitoria[256];
@@ -96,7 +114,8 @@ void batalha(Personagem *p, MonstroBase *monstro) {
                         subirNivel(p);
                         p->experiencia = 0;
                     }
-                    Sleep(1000);
+                    Sleep(600);
+                    LimparBuffer();
                     return;
                 }
 
@@ -105,7 +124,8 @@ void batalha(Personagem *p, MonstroBase *monstro) {
                 p->vida -= dano;
                 linhaCol(19, 2);
                 printf("%s causou %d de dano!", monstro->nome, dano);
-                Sleep(1000);
+                Sleep(600);
+                LimparBuffer();
             }
         }
     }
